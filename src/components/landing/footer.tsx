@@ -9,7 +9,7 @@ export function Footer() {
           <div>
             <div className="flex items-center space-x-2">
               <Zap className="h-6 w-6" />
-              <span class="font-bold">Podfox</span>
+              <span className="font-bold">Podfox</span>
             </div>
             <p className="mt-4 text-sm text-muted-foreground">
               AI-powered daily briefings that transform your information into engaging podcasts.
