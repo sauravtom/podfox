@@ -2,6 +2,8 @@
 
 **Submission for the MCP and Agents Hackathon w/ Featureform, Ridge Ventures, Smithery, and Martian.**
 
+[![smithery badge](https://smithery.ai/badge/@sauravtom/podfox-audio-tours)](https://smithery.ai/server/@sauravtom/podfox-audio-tours)
+
 Podfox is a cutting-edge application that transforms your interests into personalized, engaging podcasts. By leveraging the power of AI, Podfox curates content based on your favorite topics, delivering a unique listening experience every time.
 
 ## Features
