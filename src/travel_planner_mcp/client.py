@@ -1,25 +1,45 @@
+from fastapi import FastAPI, Request
+from pydantic import BaseModel
 import asyncio
 from mcp_use import MCPClient
+from mcp.types import TextContent  # ✅ Add this import
+import uvicorn
 
-async def main():
-    # Use the ngrok HTTPS URL with a trailing slash
-    ngrok_url = "https://cb1754f6c68d.ngrok-free.app/mcp/"
+app = FastAPI()
 
+MCP_URL = "http://localhost:8000/mcp/"  # Update as needed
+
+class TripRequest(BaseModel):
+    preferences: str
+
+@app.post("/plan-trip")
+async def plan_trip(req: TripRequest):
+    print("In plan_trip...")
     client = MCPClient(config={
         "mcpServers": {
             "travel": {
-                "url": ngrok_url
+                "url": MCP_URL
             }
         }
     })
 
-    # Create session with the remote EnrichMCP server
-    session = await client.create_session("travel")
+    print("The req is : " + str(req))
+    try:
+        session = await client.create_session("travel")
+        result = await session.connector.call_tool("plan_trip", {"preferences": req.preferences})
+        print("Here is my result: " + str(result))
+        await client.close_all_sessions()
+        
+        # Extract just the text content
+        # Extract the text field from the content list
+        if result.content and isinstance(result.content[0], TextContent):
+            itinerary_text = result.content[0].text
+        else:
+            itinerary_text = "No itinerary returned."
 
-    # Call the 'list_destinations' tool
-    result = await session.connector.call_tool("plan_trip", {"preferences": "I want to go to spain!"})
-    print("Destinations:\n" + str(result))
-    await client.close_all_sessions()
+        return {"itinerary": itinerary_text}
+    except Exception as e:
+        return {"error": str(e)}
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    uvicorn.run(app, host="0.0.0.0", port=8001)

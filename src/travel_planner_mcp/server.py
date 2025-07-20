@@ -98,7 +98,7 @@ def parse_to_destinations(full_message: str) -> list[Destination]:
 @app.retrieve
 async def plan_trip(
     preferences: Annotated[str, Field(description="Your travel preferences")],
-) -> list[Destination]:
+) -> str:
     """Return three destinations that best match the given preferences."""
     ctx = app.get_context()
     prompt = (
@@ -117,7 +117,7 @@ async def plan_trip(
     )
     full_message = response.choices[0].message.content
     print("This is the response..." + str(full_message))
-    return parse_to_destinations(full_message)
+    return full_message
 
 
 if __name__ == "__main__":
