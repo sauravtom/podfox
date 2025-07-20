@@ -33,6 +33,7 @@ interface UserData {
 }
 
 const KEYWORD_SUGGESTIONS = [
+  "Hidden gems in San Francisco, offbeat travel destinations, local experiences",
   "Hidden gems in Europe, offbeat travel destinations, local experiences",
   "Backpacking tips, solo travel hacks, budget-friendly itineraries",
   "Luxury travel, 5-star hotels, fine dining, exclusive resorts",
