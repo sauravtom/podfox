@@ -88,7 +88,7 @@ export function HowItWorksSection() {
           className="mx-auto max-w-3xl text-center mb-20"
         >
           <h2 className="text-4xl font-bold tracking-tight sm:text-5xl mb-6">
-            How <span className="text-gradient">Podgenius</span> Works
+            How <span class="text-gradient">Podfox</span> Works
           </h2>
           <p className="text-xl text-muted-foreground leading-relaxed">
             From raw information to polished podcast in four simple steps.

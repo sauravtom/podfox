@@ -103,7 +103,7 @@ export function Navbar() {
                 />
               </motion.div>
               <span className="hidden font-bold text-xl sm:inline-block text-gradient hover:scale-105 transition-transform">
-                Podgenius
+                Podfox
               </span>
             </Link>
           </motion.div>
@@ -178,7 +178,7 @@ export function Navbar() {
               >
                 <Zap className="h-6 w-6 text-primary" />
               </motion.div>
-              <span className="font-bold text-gradient">Podgenius</span>
+              <span className="font-bold text-gradient">Podfox</span>
             </Link>
           </motion.div>
           
@@ -269,4 +269,4 @@ export function Navbar() {
       </AnimatePresence>
     </motion.nav>
   );
-} 
+}

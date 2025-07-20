@@ -8,7 +8,7 @@ import { Toaster } from "@/components/ui/sonner";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Podgenius - AI-Powered Daily Briefings",
+  title: "Podfox - AI-Powered Daily Briefings",
   description: "Transform your emails, calendar, and interests into personalized podcast briefings",
 };
 

@@ -88,7 +88,7 @@ export function GmailStep({ connected, onConnectionChange }: GmailStepProps) {
         </div>
         <h3 className="text-lg font-semibold mb-2">Connect Your Gmail</h3>
         <p className="text-muted-foreground text-sm">
-          Allow Podgenius to analyze your important emails and newsletters to include relevant insights in your briefings.
+          Allow Podfox to analyze your important emails and newsletters to include relevant insights in your briefings.
         </p>
       </div>
 

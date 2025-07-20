@@ -369,7 +369,7 @@ export default function DashboardPage() {
                 }}
               />
             </motion.div>
-            <h1 className="text-xl font-bold text-gradient">Podgenius Dashboard</h1>
+            <h1 class="text-xl font-bold text-gradient">Podfox Dashboard</h1>
           </motion.div>
           <motion.div
             whileHover={{ scale: 1.05 }}

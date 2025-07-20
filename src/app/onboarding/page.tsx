@@ -21,7 +21,7 @@ export interface OnboardingData {
 }
 
 const steps = [
-  { id: "welcome", title: "Welcome", description: "Get started with Podgenius" },
+  { id: "welcome", title: "Welcome", description: "Get started with Podfox" },
   { id: "interests", title: "Interests", description: "Choose your topics" },
   { id: "gmail", title: "Gmail", description: "Connect your email" },
   { id: "calendar", title: "Calendar", description: "Sync your schedule" },
@@ -114,7 +114,7 @@ export default function OnboardingPage() {
       
       toast({
         title: "Onboarding Complete!",
-        description: "Welcome to Podgenius. You're all set to start generating podcasts.",
+        description: "Welcome to Podfox. You're all set to start generating podcasts.",
       });
       
       // Add a small delay to ensure the data is properly saved before redirecting
@@ -238,7 +238,7 @@ export default function OnboardingPage() {
       <div className="max-w-2xl mx-auto pt-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-center text-gray-900 mb-2">
-            Welcome to Podgenius
+            Welcome to Podfox
           </h1>
           <p className="text-center text-gray-600 mb-6">
             Let's set up your personalized podcast experience
@@ -314,4 +314,4 @@ export default function OnboardingPage() {
       </div>
     </div>
   );
-} 
+}

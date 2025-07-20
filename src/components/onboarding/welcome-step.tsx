@@ -10,7 +10,7 @@ export function WelcomeStep() {
           </div>
         </div>
         
-        <h3 className="text-2xl font-bold mb-3">Welcome to Podgenius!</h3>
+        <h3 className="text-2xl font-bold mb-3">Welcome to Podfox!</h3>
         <p className="text-muted-foreground mb-6">
           We&apos;ll help you create personalized podcast briefings from your emails, calendar, and interests. 
           This setup takes just a few minutes.
@@ -56,4 +56,4 @@ export function WelcomeStep() {
       </div>
     </div>
   );
-} 
+}

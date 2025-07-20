@@ -18,7 +18,7 @@ export function CompleteStep({ data }: CompleteStepProps) {
         
         <h3 className="text-2xl font-bold mb-3">You&apos;re All Set!</h3>
         <p className="text-muted-foreground mb-6">
-          Congratulations! Your Podgenius account is configured and ready to generate personalized podcast briefings.
+          Congratulations! Your Podfox account is configured and ready to generate personalized podcast briefings.
         </p>
         
         <div className="space-y-4 text-left">

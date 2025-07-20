@@ -232,7 +232,7 @@ Topics covered: ${keywords.join(', ')}`;
     
     try {
       const playlistTitle = `${username}'s AI Podcast Collection`;
-      const playlistDescription = `AI-generated podcasts created with Podgenius for ${username}`;
+      const playlistDescription = `AI-generated podcasts created with Podfox for ${username}`;
       const playlistId = await getOrCreatePlaylist(playlistTitle, playlistDescription);
       await addVideoToPlaylist(playlistId, videoId);
       playlistUrl = `https://www.youtube.com/playlist?list=${playlistId}`;
