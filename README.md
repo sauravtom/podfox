@@ -1,36 +1,95 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Podfox - Your Personalized AI Podcast Generator
+
+**Submission for the MCP and Agents Hackathon w/ Featureform, Ridge Ventures, Smithery, and Martian.**
+
+Podfox is a cutting-edge application that transforms your interests into personalized, engaging podcasts. By leveraging the power of AI, Podfox curates content based on your favorite topics, delivering a unique listening experience every time.
+
+## Features
+
+- **Personalized Content:** Generates podcasts based on user-defined interests.
+- **AI-Powered:** Utilizes advanced AI to research, script, and produce high-quality audio content.
+- **Seamless Integration:** Connects with your Google Calendar and Gmail to create relevant content based on your schedule and communications.
+- **User-Friendly Onboarding:** A simple, step-by-step process to get you started in minutes.
+- **Secure Authentication:** Employs Clerk for robust and secure user management.
+
+## Architecture Diagram
+
+```mermaid
+graph TD
+    A[User] --> B{Next.js Frontend};
+    B --> C{Clerk Authentication};
+    B --> D[API Routes];
+    D --> E{Google Calendar API};
+    D --> F{Gmail API};
+    D --> G[AI Podcast Generation];
+    G --> H{OpenAI API};
+    G --> I{Exa API};
+    I --> J[Research Agent];
+    H --> K[Scripting Agent];
+    K --> L[Audio Generation];
+```
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- Node.js (v20 or later)
+- npm
+
+### Installation
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/your-username/podfox.git
+   cd podfox
+   ```
+
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+
+3. **Set up environment variables:**
+   Create a `.env.local` file in the root of the project and add the following environment variables:
+
+```
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
+CLERK_SECRET_KEY=your_clerk_secret_key
+NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
+NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
+NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL=/onboarding
+NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL=/onboarding
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+4. **Run the development server:**
+   ```bash
+   npm run dev
+   ```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Open [http://localhost:3000](http://localhost:3000) in your browser to see the application.
 
-## Learn More
+## Tech Stack
 
-To learn more about Next.js, take a look at the following resources:
+- **Frontend:** Next.js, React, Tailwind CSS, Shadcn UI
+- **Authentication:** Clerk
+- **AI:** OpenAI, Exa
+- **Google APIs:** Gmail, Google Calendar
+- **Deployment:** Vercel
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Project Structure
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
+/src
+├── app/                # Main application routes
+│   ├── api/            # API endpoints
+│   ├── dashboard/      # User dashboard
+│   └── ...
+├── components/         # Reusable UI components
+├── lib/                # Helper functions and utilities
+└── ...
+```
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+*This project was created for the MCP and Agents Hackathon and is a demonstration of the power of AI-driven content creation.*
