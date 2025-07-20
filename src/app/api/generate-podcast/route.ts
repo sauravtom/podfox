@@ -262,8 +262,8 @@ Topics covered: ${keywords.join(', ')}`;
 
 export async function POST(request: NextRequest) {
   try {
+    // 1️⃣ Read and validate the incoming “keywords” field
     const { keywords, userId = 'default_user' } = await request.json();
-    
     if (!keywords) {
       return NextResponse.json(
         { error: 'Keywords are required' },
@@ -271,116 +271,124 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const researchResponse = await exa.searchAndContents(keywords, {
-      type: 'neural',
-      numResults: 5,
-      highlights: true,
+    // 2️⃣ Call your MCP-backed travel planner to get an itinerary
+    const mcpUrl = process.env.TRAVEL_PLANNER_API_URL!; // e.g. "http://localhost:8001"
+    const tripRes = await fetch(`${mcpUrl}/plan-trip`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ preferences: keywords }), // map your “keywords” into the MCP’s “preferences”
     });
 
-    const researchSummary = researchResponse.results
-      .map((result, idx) => 
-        `${idx + 1}. ${result.title}\n${result.highlights?.join(' ') || (result as any).text?.substring(0, 200) || ''}`
-      )
-      .join('\n\n');
+    if (!tripRes.ok) {
+      console.error('Itinerary fetch failed:', await tripRes.text());
+      return NextResponse.json(
+        { error: 'Failed to fetch itinerary' },
+        { status: 502 }
+      );
+    }
+    const { itinerary, error: mcpError } = await tripRes.json();
+    if (mcpError) {
+      console.error('MCP service error:', mcpError);
+      return NextResponse.json(
+        { error: 'Itinerary generation error' },
+        { status: 502 }
+      );
+    }
 
-    const scriptResponse = await openai.chat.completions.create({
+    // 3️⃣ Generate the podcast script from the itinerary
+    const scriptResp = await openai.chat.completions.create({
       model: 'gpt-4-turbo-preview',
       messages: [
         {
           role: 'system',
-          content: `You are a professional podcast scriptwriter who creates engaging conversations between two hosts: Alex (curious and asks great questions) and Sam (knowledgeable and explains well). Create a natural, conversational 3-5 minute podcast script based on the research provided. Keep it concise and under 4000 characters total. Include speaker labels (Alex: and Sam:) for each line of dialogue.`
+          content: `You are a professional podcast scriptwriter who creates engaging conversations between two hosts: Alex (curious) and Sam (knowledgeable).`,
         },
         {
           role: 'user',
-          content: `Create a podcast script about: ${keywords}\n\nResearch findings:\n${researchSummary}`
-        }
+          content: `Here’s a travel itinerary:\n\n${itinerary}\n\nWrite a natural, conversational 3–5 minute podcast script (Alex & Sam) that walks through this trip.`,
+        },
       ],
       max_tokens: 2000,
       temperature: 0.7,
     });
+    const script = scriptResp.choices[0]?.message?.content || '';
 
-    const script = scriptResponse.choices[0]?.message?.content || '';
+    // 4️⃣ Turn that script into audio (and video + optional YouTube upload)
+    let audioUrl: string | null = null;
+    let videoUrl: string | null = null;
+    let youtubeUrl: string | null = null;
+    let videoId: string | null = null;
 
-    let audioUrl = null;
-    let videoUrl = null;
-    let youtubeUrl = null;
-    let videoId = null;
-    
     try {
+      // 4a. Text‐to‐speech
       let ttsInput = script;
-      
       if (script.length > 4000) {
-        console.log(`⚠️ Script too long (${script.length} chars), truncating to 4000 chars for TTS`);
-        ttsInput = script.substring(0, 3950) + '...';
+        console.log(`⚠️ Script too long (${script.length} chars), truncating for TTS`);
+        ttsInput = script.slice(0, 3950) + '...';
       }
-      
-      const ttsResponse = await openai.audio.speech.create({
+      const ttsResp = await openai.audio.speech.create({
         model: 'tts-1',
         voice: 'alloy',
         input: ttsInput,
         response_format: 'mp3',
       });
+      const audioBuffer = Buffer.from(await ttsResp.arrayBuffer());
 
-      const audioBuffer = Buffer.from(await ttsResponse.arrayBuffer());
-      
+      // 4b. Package it into a video
       try {
-        const imageUrl = `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/dog.webp`;
+        const imageUrl =
+          `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/dog.webp`;
         const imageBuffer = await fetchImageBuffer(imageUrl);
         const videoBuffer = await createVideoBuffer(audioBuffer, imageBuffer);
-        const videoBase64 = videoBuffer.toString('base64');
-        videoUrl = `data:video/mp4;base64,${videoBase64}`;
-        console.log('✅ Video created successfully from buffer');
-        
+        videoUrl = `data:video/mp4;base64,${videoBuffer.toString('base64')}`;
+
+        // 4c. (Optional) upload to YouTube
         try {
           if (isYouTubeConfigured()) {
-            const title = `AI Podcast: ${keywords}`;
-            const keywordsArray = keywords.split(',').map((k: string) => k.trim());
             const user = await currentUser();
-            const username = user?.username ?? user?.firstName ?? user?.lastName ?? 'AI User';
-            
-            const youtubeResult = await uploadToYouTube(videoBuffer, title, researchSummary, keywordsArray, username);
-            youtubeUrl = youtubeResult.youtubeUrl;
-            videoId = youtubeResult.videoId;
-            console.log('✅ Video successfully uploaded to YouTube:', youtubeUrl);
-            if (youtubeResult.playlistUrl) {
-              console.log('✅ Video added to playlist:', youtubeResult.playlistUrl);
-            }
-          } else {
-            console.log('⚠️ YouTube upload skipped: OAuth2 authentication not configured');
-            console.log('💡 To enable YouTube uploads:');
-            console.log('   1. Run: python youtube_auth_setup.py');
-            console.log('   2. Authenticate with your Google account');
-            console.log('   3. Restart the application');
-            console.log('✅ Alternative: Use the download button to save videos and upload manually');
+            const username =
+              user?.username ?? user?.firstName ?? user?.lastName ?? 'AI User';
+            const title = `AI Podcast: ${keywords}`;
+            const description = `Here’s the travel itinerary:\n\n${itinerary}`;
+
+            const ytResult = await uploadToYouTube(
+              videoBuffer,
+              title,
+              description,
+              [],      // you can derive tags from `keywords` if you like
+              username
+            );
+            youtubeUrl = ytResult.youtubeUrl;
+            videoId = ytResult.videoId;
           }
-        } catch (youtubeError) {
-          console.log('⚠️ YouTube upload failed:', youtubeError instanceof Error ? youtubeError.message : String(youtubeError));
+        } catch (ytErr) {
+          console.warn('⚠️ YouTube upload failed:', ytErr);
         }
-      } catch (videoError) {
-        console.error('❌ Error creating video:', videoError);
+      } catch (vidErr) {
+        console.error('❌ Error creating video:', vidErr);
       }
-      
-      const audioBase64 = audioBuffer.toString('base64');
-      audioUrl = `data:audio/mp3;base64,${audioBase64}`;
-    } catch (ttsError) {
-      console.error('TTS or video creation error:', ttsError);
+
+      // 4d. Always include the audio URL
+      audioUrl = `data:audio/mp3;base64,${audioBuffer.toString('base64')}`;
+    } catch (ttsErr) {
+      console.error('❌ TTS error:', ttsErr);
     }
 
+    // 5️⃣ Return everything
     return NextResponse.json({
       success: true,
       data: {
         keywords,
-        userId,
+        itinerary,
         script,
         audioUrl,
         videoUrl,
         youtubeUrl,
         videoId,
-        researchSummary,
+        userId,
         timestamp: new Date().toISOString(),
-      }
+      },
     });
-
   } catch (error) {
     console.error('Podcast generation error:', error);
     return NextResponse.json(
@@ -388,4 +396,4 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     );
   }
-} 
+}
