@@ -21,14 +21,13 @@ graph TD
     A[User] --> B{Next.js Frontend};
     B --> C{Clerk Authentication};
     B --> D[API Routes];
-    D --> E{Google Calendar API};
-    D --> F{Gmail API};
+    D --> E{Google Calendar API (todo)};
+    D --> F{Gmail API (todo)};
     D --> G[AI Podcast Generation];
     G --> H{OpenAI MCP};
-    G --> I{Exa MCP};
-    I --> J[Research Agent];
-    H --> K[Scripting Agent];
-    K --> L[Audio Generation];
+    I --> J[Research Agent (web search api)];
+    H --> K[Scripting Agent (Prompt Eng.)];
+    K --> L[Audio Generation (11labs)];
 ```
 
 ## Getting Started
