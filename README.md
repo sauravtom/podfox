@@ -22,8 +22,8 @@ graph TD
     D --> E{Google Calendar API};
     D --> F{Gmail API};
     D --> G[AI Podcast Generation];
-    G --> H{OpenAI API};
-    G --> I{Exa API};
+    G --> H{OpenAI MCP};
+    G --> I{Exa MCP};
     I --> J[Research Agent];
     H --> K[Scripting Agent];
     K --> L[Audio Generation];
