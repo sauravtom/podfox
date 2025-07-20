@@ -33,16 +33,16 @@ interface UserData {
 }
 
 const KEYWORD_SUGGESTIONS = [
-  "True crime, unsolved mysteries, serial killer cases",
-  "Investing, financial advice, stock market trends, budgeting",
-  "Technology news, AI developments, cryptocurrency, quantum computing",
-  "Health and wellness, fitness tips, mental health, nutrition",
-  "Business and entrepreneurship, startup stories, leadership",
-  "Science discoveries, space exploration, climate change",
-  "Pop culture, celebrity news, entertainment industry",
-  "Travel destinations, cultural experiences, food and cuisine",
-  "Personal development, productivity, career advice",
-  "Sports analysis, game highlights, athlete interviews"
+  "Hidden gems in Europe, offbeat travel destinations, local experiences",
+  "Backpacking tips, solo travel hacks, budget-friendly itineraries",
+  "Luxury travel, 5-star hotels, fine dining, exclusive resorts",
+  "Adventure travel, hiking trails, extreme sports, outdoor escapes",
+  "Digital nomad lifestyle, remote work destinations, coworking abroad",
+  "Cultural festivals, historical landmarks, heritage cities",
+  "Beach vacations, tropical islands, snorkeling and diving spots",
+  "Road trips, scenic drives, camper van travel, RV living",
+  "Traveling with kids, family-friendly destinations, multigenerational trips",
+  "Travel photography, Instagram-worthy locations, drone footage spots"
 ];
 
 export default function DashboardPage() {
